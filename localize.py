@@ -40,7 +40,7 @@ def gaussprof(x, N, *args):
       return amp*np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
 
 def tfunc(x,*args):
-    ncomps = len(args)/3
+    ncomps = int(len(args)/3)
     phass = list(args[:ncomps])
     ampls = list(args[ncomps:2*ncomps])
     fwhms = list(args[2*ncomps:3*ncomps])
@@ -170,7 +170,7 @@ class scan:
         # of a scan and when GUPPI starts writing data.
         self.actual_start_ra  = pf.rastr
         self.actual_start_dec = pf.decstr 
-        pos_str = pf.rastr+' '+pf.decstr
+        pos_str = str(pf.rastr.decode("utf-8"))+' '+str(pf.decstr.decode("utf-8"))
         self.actual_start_coord = SkyCoord(pos_str, frame=ICRS, unit=(u.hourangle,u.deg), obstime="J2015.0")
         
         # Remove DC/scale by STDEV, subtract polynomials, remove DC/scale by STDEV.
