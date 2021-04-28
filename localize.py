@@ -79,7 +79,7 @@ def read_gaussfit(gaussfitfile, Nprofbins):
             fwhms.append(float(line.split()[2]))
 
     if not (len(phass) == len(ampls) == len(fwhms)):
-        print "Number of phases, amplitudes, and FWHMs are not the same in '%s'!"%gaussfitfile
+        print("Number of phases, amplitudes, and FWHMs are not the same in '%s'!"%gaussfitfile)
         return 0.0
 
     phass = np.asarray(phass)
@@ -116,7 +116,7 @@ def coord_string(c_str,c_type='hms'):
         elif Latitude(c_str) < 0.0: sign = ''
         return sign+c_str.to_string(unit=u.degree,sep=':')
     else:
-        print "coord_string s_type=%s not recognized" % (s_type)
+        print("coord_string s_type=%s not recognized" % (s_type))
         exit()
 
 
@@ -210,7 +210,7 @@ class scan:
         # Use 1D fit results as initial guesses for full, 2D fit.
         self.amp_guess = self.bp_vals[0]
         self.off_guess = self.bp_vals[1]
-        #print '...end bootstrap...',datetime.now()
+        #print('...end bootstrap...',datetime.now())
 
 
         # USE 1D FITS TO CALCULATE BEST RA/DEC VALUES
@@ -218,7 +218,7 @@ class scan:
         if self.direction:
             xxx = self.actual_start_coord.dec+Angle(self.off_guess,u.arcmin)
             dd  = coord_string(xxx,c_type='dms') 
-            #print "Best Dec = %s" % (dd)
+            #print("Best Dec = %s" % (dd))
             self.best = dd 
 
         # Direction = 0 (ra); cos(dec) factor necessary!
@@ -226,7 +226,7 @@ class scan:
             cos_dec_factor = 1.0/np.cos(self.actual_start_coord.dec)
             xxx = self.actual_start_coord.ra+Angle(self.off_guess * cos_dec_factor * u.arcmin)
             aa  = coord_string(xxx,c_type='hms') 
-            #print "Best RA = %s" % (aa)
+            #print("Best RA = %s" % (aa))
             self.best = aa
 
     def get_recovered_skycoord(self,position_string):
@@ -422,7 +422,7 @@ class loc_info:
         so = scan_object
         temp = so.temp_file.split('/')[-1].split('.')
         out_base = "%s_%s_results" % (temp[0],temp[1])
-        #print out_base
+        #print(out_base)
 
         # Shift profile and fix on/off bins (won't work yet, need to fix external on/off in amps_errs function)
         bin_shift = so.nbin/2 - np.argmax(so.folded_profile)
@@ -487,49 +487,49 @@ class loc_info:
     def text_out(self):
 
         for ii,ss in enumerate(self.scans):
-            print ""
-            print "== %s scan (#%s) ==" % (ss.get_dir_string(),ii+1) 
-            print "Angular coverage (deg): %s" % (self.arc)
-            print "Mapping rate ('/s): %.3f" % (self.driftrate)
-            print "Intended scan length (s): %.1f" % (self.arc*60.0/self.driftrate)
-            print "Actual scan length (s): %.1f" % (ss.length)
-            print "Effective angular difference ('): %.1f" % (self.arc*60.0 - ss.length*self.driftrate)
-            dx_sys,dy_sys = ss.systematic_offset * np.sin(ss.systematic_pa * np.pi/180.0), ss.systematic_offset * np.cos(ss.systematic_pa * np.pi/180.0)
-            print "Systematic RA offset ('): %.2f" % (dx_sys)
-            print "Systematic Dec offset ('): %.2f" % (dy_sys)
-            print "--------------------------------------"
-            print "Intended Start Position: %s %s" % ss.isp_strs 
-            print "Actual Start Position: %s %s" % ss.asp_strs 
-            print "Amplitude Error EFAC: %.2f" % (ss.efac)
-            print "1D Recovered %s: %s" % (ss.get_dir_string(),ss.best)
-            print ""
-            print ""
+            print("")
+            print("== %s scan (#%s) ==" % (ss.get_dir_string(),ii+1) )
+            print("Angular coverage (deg): %s" % (self.arc))
+            print("Mapping rate ('/s): %.3f" % (self.driftrate))
+            print("Intended scan length (s): %.1f" % (self.arc*60.0/self.driftrate))
+            print("Actual scan length (s): %.1f" % (ss.length))
+            print("Effective angular difference ('): %.1f" % (self.arc*60.0 - ss.length*self.driftrate)
+            dx_sys,dy_sys = ss.systematic_offset * np.sin(ss.systematic_pa * np.pi/180.0), ss.systematic_offset * np.cos(ss.systematic_pa * np.pi/180.0))
+            print("Systematic RA offset ('): %.2f" % (dx_sys))
+            print("Systematic Dec offset ('): %.2f" % (dy_sys))
+            print("--------------------------------------")
+            print("Intended Start Position: %s %s" % ss.isp_strs )
+            print("Actual Start Position: %s %s" % ss.asp_strs )
+            print("Amplitude Error EFAC: %.2f" % (ss.efac))
+            print("1D Recovered %s: %s" % (ss.get_dir_string(),ss.best))
+            print("")
+            print("")
             gi = ss.ee < 500.0
             AA = np.max(ss.ii[gi])
             MM = np.sqrt(np.mean(ss.ee[gi]**2))
             hh = 60.0*self.arc/ss.nsub
-            print "A:                        %.2f" % (AA)
-            print "mu:                       %.2f" % (MM)
-            print "Expected Uncertainty ('): %.2f" % (np.sqrt(2/np.pi)*hh*MM/AA)
+            print("A:                        %.2f" % (AA))
+            print("mu:                       %.2f" % (MM))
+            print("Expected Uncertainty ('): %.2f" % (np.sqrt(2/np.pi)*hh*MM/AA))
 
-        print ""
-        print "Source Position:    %s %s" % (self.input_ra, self.input_dec)
-        print "OTF Map Center:     %s %s" % (coord_string(self.center_position.ra,c_type='hms'),
-                                            coord_string(self.center_position.dec,c_type='dms'))
-        print "Recovered Position: %s %s" % (coord_string(self.recovered_skycoord.ra,c_type='hms'),
-                                            coord_string(self.recovered_skycoord.dec,c_type='dms'))
+        print("")
+        print("Source Position:    %s %s" % (self.input_ra, self.input_dec))
+        print("OTF Map Center:     %s %s" % (coord_string(self.center_position.ra,c_type='hms'),
+                                            coord_string(self.center_position.dec,c_type='dms')))
+        print("Recovered Position: %s %s" % (coord_string(self.recovered_skycoord.ra,c_type='hms'),
+                                            coord_string(self.recovered_skycoord.dec,c_type='dms')))
 
         ra_err_1d  = self.pos_errors[0]
         dec_err_1d = self.pos_errors[1]
         sep_1d     = (self.actual_skycoord.separation(self.recovered_skycoord)).to(u.arcmin).value
         posang_1d  = (self.actual_skycoord.position_angle(self.recovered_skycoord)).to(u.deg).value
 
-        print "RA/Dec Uncertainties ('): %.2f/%.2f" % (ra_err_1d,dec_err_1d)
-        print "Separation ('):           %.2f" % (sep_1d)
-        print "Position Angle (deg):     %.2f" % (posang_1d)
+        print("RA/Dec Uncertainties ('): %.2f/%.2f" % (ra_err_1d,dec_err_1d))
+        print("Separation ('):           %.2f" % (sep_1d))
+        print("Position Angle (deg):     %.2f" % (posang_1d))
 
-        print ""
-        print "== 2D Fit Results =="
+        print("")
+        print("== 2D Fit Results ==")
         # ress[0] = amplitude, ress[1] = ra offset, ress[2] = dec offset
         cos_dec_factor = 1.0/np.cos(self.center_position.dec)
         recovered_x_2d = self.x_start_position.ra+Angle(self.ress[1] * cos_dec_factor * u.arcmin)
@@ -538,15 +538,15 @@ class loc_info:
         ra_err_2d, dec_err_2d = self.errs[1],self.errs[2]
         sep_2d = self.actual_skycoord.separation(recovered_skycoord_2d).arcmin
         posang_2d = self.actual_skycoord.position_angle(recovered_skycoord_2d).deg
-        print "Recovered Position:       %s %s" % (coord_string(recovered_skycoord_2d.ra,c_type='hms'),
-                                                coord_string(recovered_skycoord_2d.dec,c_type='dms')) 
-        print "RA/Dec Uncertainties ('): %.2f/%.2f" % (ra_err_2d,dec_err_2d)
-        print "Separation ('):           %.2f" % (sep_2d)
-        print "Position Angle (deg):     %.2f" % (posang_2d)
+        print("Recovered Position:       %s %s" % (coord_string(recovered_skycoord_2d.ra,c_type='hms'),
+                                                coord_string(recovered_skycoord_2d.dec,c_type='dms'))) 
+        print("RA/Dec Uncertainties ('): %.2f/%.2f" % (ra_err_2d,dec_err_2d))
+        print("Separation ('):           %.2f" % (sep_2d))
+        print("Position Angle (deg):     %.2f" % (posang_2d))
 
-        print ""
-        print '1D:',sep_1d, posang_1d, ra_err_1d, dec_err_1d
-        print '2D:',sep_2d, posang_2d, ra_err_2d, dec_err_2d
+        print("")
+        print('1D:',sep_1d, posang_1d, ra_err_1d, dec_err_1d)
+        print('2D:',sep_2d, posang_2d, ra_err_2d, dec_err_2d)
 
 
     def fit_2d_beam(self):
